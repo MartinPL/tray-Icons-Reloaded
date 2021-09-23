@@ -2,6 +2,7 @@ const GObject		= imports.gi.GObject;
 const Gtk			= imports.gi.Gtk;
 const Gio			= imports.gi.Gio;
 const getSettings	= imports.misc.extensionUtils.getSettings;
+const Me			= imports.misc.extensionUtils.getCurrentExtension();
 
 const settingsWidgets = new GObject.Class({
 	Name: 'TrayIcons.Settings',
@@ -134,14 +135,25 @@ const settingsWidgets = new GObject.Class({
 		this.attach(label, 0, 9, 2, 1);
 		this.attach(widget, 2, 9, 1, 1);
 
+		let expander = new Gtk.Expander({ label: 'Blacklist'});
+		let box = new Gtk.Box();
+		let text = new Gtk.Label({ label: 'Blacklisted Apps: '});
+		text.set_tooltip_text('Comma seperated list of apps that sould not be displayed in the tray.')
+		let entry = new Gtk.Entry({hexpand: true});
+		this._settings.bind('blacklisted-apps', entry, 'text', Gio.SettingsBindFlags.DEFAULT);
+		box.append(text);
+		box.append(entry);
+		expander.set_child(box);
+
+		this.attach(expander, 0, 12, 3, 1);
 		this._footer();
 	},
 
 	_footer() {
 		label = new Gtk.LinkButton({ label: 'GitHub', uri: 'https://github.com/MartinPL/Tray-Icons-Reloaded', hexpand: true, halign: Gtk.Align.START });
-		this.attach(label, 1, 10, 1, 1);
+		this.attach(label, 1, 999, 1, 1);
 		label = new Gtk.LinkButton({ label: 'Donate', uri: 'https://revolut.me/martinpl', hexpand: true, halign: Gtk.Align.END });
-		this.attach(label, 1, 10, 1, 1);
+		this.attach(label, 1, 999, 1, 1);
 	}
 
 });
